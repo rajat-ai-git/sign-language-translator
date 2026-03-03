@@ -16,12 +16,20 @@ while True:
     mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
     results = detector.detect(mp_image)
     if results.hand_landmarks:
+        row=[]
+
         for hand in results.hand_landmarks:
             for landmark in hand:
                 x = int(landmark.x * frame.shape[1])
                 y = int(landmark.y * frame.shape[0])
+                z = int(landmark.z * frame.shape[1])
+                row.append(landmark.x)
+                row.append(landmark.y)
+                row.append(landmark.z)
                 cv2.circle(frame, (x, y), 5, (255, 255, 0), -1)
-
+               
+        print(row)
+        print(len(row))
     cv2.imshow('video', frame)
 
     if cv2.waitKey(20) & 0xFF == ord('q'):
