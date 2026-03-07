@@ -5,6 +5,8 @@ from mediapipe.tasks.python import vision
 import csv
 import pickle
 
+sentence =[]
+last_prediction = ""
 with open('model.pkl', 'rb')as f:
     model = pickle.load(f)
 
@@ -37,8 +39,16 @@ while True:
                 cv2.circle(frame, (x, y), 5, (255, 255, 0), -1)
                
         prediction = model.predict([row])
+        #cv2.putText(frame, str(prediction[0]), (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        if prediction[0] != last_prediction:
+            sentence.append(prediction[0])
+            last_prediction = prediction[0]
+
         cv2.putText(frame, str(prediction[0]), (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        cv2.putText(frame, " ".join(sentence), (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (244, 255, 255), 2)
+
         
+
     cv2.imshow('video', frame)
 
     if cv2.waitKey(20) & 0xFF == ord('q'):
